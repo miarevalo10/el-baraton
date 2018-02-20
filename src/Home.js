@@ -19,7 +19,7 @@ class Home extends Component {
 
           <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
 
-            <h1>Welcome to hell dudeeeeee</h1>
+            <h1>Welcome!</h1>
           </div>
 
         </Content>
