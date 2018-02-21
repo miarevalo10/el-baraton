@@ -27,19 +27,19 @@ class Navbar extends Component {
     return !item.sublevels;
   }
 
-  //Falta hacer responsive el menú
   render() {
     let globcomp = this;
     return (
       <div>
         <Menu onClick={this.handleClick}
            mode="horizontal">
+
            {this.state.items.map(function(item){
              return   <SubMenu key={item.id} title={item.name}>
-                        {
+                        {//Validar si el subnivel siguiente es final para decidir si es menu items o menu item group
                             item.sublevels.every(globcomp.isLast.bind(this))&&
                               item.sublevels.map(function(sublevel){
-                                
+
                                 return <Menu.Item key={sublevel.id}><Link to={'/table/'+item.name+'-'+sublevel.name+'/'+sublevel.id}>{sublevel.name}</Link></Menu.Item>
                               })
                         }

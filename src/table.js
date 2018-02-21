@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import data from './products.json';
-import { Layout,Breadcrumb,Table, Input,Button,Icon,message} from 'antd';
+import { Layout,Breadcrumb,Table, Input,Button,Icon,message,Row,Col} from 'antd';
 import { Link } from 'react-router-dom'
 import WrappedFilters from './filters';
 
@@ -14,10 +14,8 @@ class ProductsTable extends Component {
 
     constructor(props) {
         super(props);
+        //Saves all products in localStorage
         localStorage.setItem('products', JSON.stringify(data));
-
-      //console.log(JSON.parse(localStorage.getItem('products')));
-      console.log(localStorage.getItem('fu'));
 
         const result =  data.filter(product => product.sublevel_id == this.props.match.params.sublevelid);
 
@@ -29,7 +27,7 @@ class ProductsTable extends Component {
           filtered: false,
           pricerange:[]
         };
-        console.log(this.state.products);
+        
         this.applyFilters = this.applyFilters.bind(this);
         this.addToCart= this.addToCart.bind(this);
         this.removeFromCart= this.removeFromCart.bind(this);
@@ -38,24 +36,21 @@ class ProductsTable extends Component {
       }
 
       /*
-      *Actualiza el componente si se selecciona otra opcion en la navbar
+      *Updates component when props are updated, i.e, a change in navbar
       */
       componentWillReceiveProps(nextProps){
-        console.log('sublevel id 1 --- ',data[0].sublevel_id);
-        console.log('sublevel id 2 --- ',this.props.match.params.sublevelid);
-        console.log('sublevel id nextproipsss --- ',nextProps.match.params.sublevelid);
 
         if (this.props!== nextProps) {
           const result2 =  data.filter(product => product.sublevel_id == nextProps.match.params.sublevelid);
-          console.log('resultado next props',result2);
           this.setState({subleveldata: result2});
           this.setState({products: result2});
           };
-          console.log('after the shit',this.subleveldata);
+          console.log('new products',this.subleveldata);
       }
 
       /*
-      * Tiggered cuando se busca algo
+      * Tiggered when enter on search.
+      * If searchtext is empty, gets all data from sublevel
       */
       handleSearch = (e) => {
         if(e.trim()!==''){
@@ -72,7 +67,8 @@ class ProductsTable extends Component {
       }
 
       /*
-      *
+      * Saves in localStorage json object for each product (with all the values ),
+      * quantity according to number of times '+' is clicked
       */
       addToCart = (record) => {
         console.log('le record', record);
@@ -82,6 +78,7 @@ class ProductsTable extends Component {
         if(localStorage.getItem('shoppingcart')===null)
         {
           shoppingcart=[record];
+
           localStorage.setItem('shoppingcart',JSON.stringify(shoppingcart));
         }
         else
@@ -105,25 +102,41 @@ class ProductsTable extends Component {
       }
 
       /*
-      *
+      * Decreases quantity in 1, of a given record.
+      * If quantity reaches 0, record is removed from localStorage
       */
       removeFromCart = (record) => {
         console.log('le record', record);
-        if(localStorage.getItem(record.id)===null)
+        var stringshoppingcart =localStorage.getItem('shoppingcart');
+        if(stringshoppingcart===null || JSON.parse(stringshoppingcart).find(function (obj) { return obj.id === record.id; })==null )
         {
-          message.warning('cannot remove this');
-
+          message.warning('This item is not in your shopping cart');
         }
 
-        record.quantity = (localStorage.getItem(record.id)===null) ? 0 : record.quantity-1;
+        else
+        {
+          var shoppingcart= JSON.parse(localStorage.getItem('shoppingcart'));
 
-        localStorage.setItem(record.id,JSON.stringify(record));
-        console.log('you just removed ->',localStorage.getItem(record.id));
-        message.success(record.quantity +' '+record.name + ' removed from cart',2);
+          var obj = shoppingcart.find(function (obj) { return obj.id === record.id; });
+          if(obj.quantity<=1){
+            //Remove item from shopping cart cause quantity will be 0 or negative
+            console.log('halo');
+            shoppingcart.splice(shoppingcart.indexOf(obj), 1);
+          }
+          else{
+            shoppingcart.find(function (obj) { return obj.id == record.id; }).quantity--;
+            console.log(('el objetiño encotrado'), obj);
+          }
+
+          localStorage.setItem('shoppingcart',JSON.stringify(shoppingcart));
+          console.log('final shopcart',JSON.parse(localStorage.getItem('shoppingcart')));
+        }
+        console.log('you just added ->',localStorage.getItem(record.id));
+
       }
 
       /*
-      * Metodos para sorting
+      * Sorting functions
       */
       onChange(pagination, filters, sorter) {
         console.log('params', pagination, filters, sorter);
@@ -134,15 +147,16 @@ class ProductsTable extends Component {
          return 0;
         }
       comparePrice(a, b) {
-        //Remover $ y ,
+        //Remove '$'  ','
         var pricea = a.price.replace("$","").replace(",","");
         var priceb = b.price.replace("$","").replace(",","");
-        /*console.log('añaña',pricea);
-        console.log('biriri',priceb);*/
 
         return pricea-priceb;
       }
 
+      /*
+      *This is called from the child component, filters, it applies the filtes submitted by the user
+      */
       applyFilters(filter){
 
         if(filter.quantity===undefined){
@@ -199,24 +213,30 @@ class ProductsTable extends Component {
        }
      ];
         return <Content style={{ padding: '0 50px' }}>
-                <Breadcrumb style={{ margin: '16px 0' }}>
-                  <Breadcrumb.Item><Link to='/'>Home</Link></Breadcrumb.Item>
-                  <Breadcrumb.Item>{this.props.match.params.product}</Breadcrumb.Item>
-                </Breadcrumb>
-
-                <div style={{ background: '#ECECEC', padding: '30px' }}>
-                  <h1>{this.props.match.params.product}</h1>
-                  <div>
-                    <WrappedFilters filters={this.applyFilters}></WrappedFilters>
-                    <Search
-                      placeholder="What are you looking for?"
-                      onSearch={this.handleSearch}
-                      size="large"
-                    />
-                    <br /><br />
+                  <Row>
+                    <Col span={22}>
+                      <Breadcrumb style={{ margin: '16px 0' }}>
+                        <Breadcrumb.Item><Link to='/'>Home</Link></Breadcrumb.Item>
+                        <Breadcrumb.Item>{this.props.match.params.product}</Breadcrumb.Item>
+                      </Breadcrumb>
+                    </Col>
+                    <Col span={2}>
+                      <Button title='Go to Shopping Cart'style={{ margin: '16px 0' }}><Link to='/shoppingcart'><Icon type="shopping-cart" /></Link></Button>
+                    </Col>
+                  </Row>
+                  <div style={{ background: '#ECECEC', padding: '30px' }}>
+                    <h1>{this.props.match.params.product}</h1>
+                    <div>
+                      <WrappedFilters filters={this.applyFilters}></WrappedFilters>
+                      <Search
+                        placeholder="What are you looking for?"
+                        onSearch={this.handleSearch}
+                        size="large"
+                      />
+                      <br /><br />
+                    </div>
+                    <Table columns={columns} dataSource={this.state.products} onChange={this.onChange} rowKey={record => record.id}  />
                   </div>
-                  <Table columns={columns} dataSource={this.state.products} onChange={this.onChange} rowKey={record => record.id}  />
-                </div>
 
               </Content>
 
