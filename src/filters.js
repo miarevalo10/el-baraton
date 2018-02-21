@@ -1,28 +1,23 @@
 import React, { Component } from 'react';
 import './App.css';
 import {
-  Form, InputNumber, Switch,
-  Slider, Button
+  Form, InputNumber, Switch, Button
 } from 'antd';
 const FormItem = Form.Item;
 
 
 class Filters extends Component {
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        this.props.filters(values);
       }
     });
   }
-  normFile = (e) => {
-    console.log('Upload event:', e);
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && e.fileList;
-  }
+
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
@@ -31,24 +26,39 @@ class Filters extends Component {
     };
     return (
       <Form onSubmit={this.handleSubmit}>
-
-
-
         <FormItem
           {...formItemLayout}
           label="Quantity"
         >
-          {getFieldDecorator('input-number', { initialValue: 3 })(
-            <InputNumber min={1} max={10} />
+          {getFieldDecorator('quantity', { valuePropName: 'quantity' })(
+            <InputNumber min={0} max={10000} />
           )}
           <span className="ant-form-text"> items </span>
         </FormItem>
 
         <FormItem
           {...formItemLayout}
+          label="Lowest price"
+        >
+          {getFieldDecorator('minprice', { valuePropName: 'price1' })(
+            <InputNumber min={1} max={100000} />
+          )}
+        </FormItem>
+
+        <FormItem
+          {...formItemLayout}
+          label="Highest price"
+        >
+          {getFieldDecorator('maxprice', { valuePropName: 'price2' })(
+            <InputNumber min={1} max={100000} />
+          )}
+        </FormItem>
+
+        <FormItem
+          {...formItemLayout}
           label="Available"
         >
-          {getFieldDecorator('switch', { valuePropName: 'checked' })(
+          {getFieldDecorator('switch', { valuePropName: 'checked', initialValue:true})(
             <Switch />
           )}
         </FormItem>

@@ -44,6 +44,11 @@ class Products extends Component {
       this.setState({products: result3});
     }
 
+    applyFilters(){
+    console.log("hello filters ;)");  
+
+    }
+
   render() {
     return (
       <div>
@@ -52,9 +57,6 @@ class Products extends Component {
             <Breadcrumb.Item><Link to='/'>Home</Link></Breadcrumb.Item>
             <Breadcrumb.Item>{this.props.match.params.product}</Breadcrumb.Item>
           </Breadcrumb>
-
-
-
 
             <div style={{ background: '#ECECEC', padding: '30px' }}>
               <h1>{this.props.match.params.product}</h1>

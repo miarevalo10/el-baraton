@@ -39,7 +39,7 @@ class Navbar extends Component {
                         {
                             item.sublevels.every(globcomp.isLast.bind(this))&&
                               item.sublevels.map(function(sublevel){
-                                console.log("bla");
+                                
                                 return <Menu.Item key={sublevel.id}><Link to={'/table/'+item.name+'-'+sublevel.name+'/'+sublevel.id}>{sublevel.name}</Link></Menu.Item>
                               })
                         }
