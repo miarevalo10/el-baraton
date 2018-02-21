@@ -22,7 +22,9 @@ class Navbar extends Component {
     console.log('click ', e);
   }
 
-  //Pregunta si el subnivel es final
+  /*
+  *Checks if it's final sublevel
+  */
   isLast(item) {
     return !item.sublevels;
   }
