@@ -76,10 +76,30 @@ class ProductsTable extends Component {
       */
       addToCart = (record) => {
         console.log('le record', record);
-
         record.quantity = (localStorage.getItem(record.id)===null) ? 1 : record.quantity+1;
-
+        var shoppingcart=[];
         localStorage.setItem(record.id,JSON.stringify(record));
+        if(localStorage.getItem('shoppingcart')===null)
+        {
+          shoppingcart=[record];
+          localStorage.setItem('shoppingcart',JSON.stringify(shoppingcart));
+        }
+        else
+        {
+          shoppingcart= JSON.parse(localStorage.getItem('shoppingcart'));
+          if(shoppingcart.find(function (obj) { return obj.id === record.id; })!=null)
+          {
+            var obj = shoppingcart.find(function (obj) { return obj.id === record.id; });
+            shoppingcart.find(function (obj) { return obj.id == record.id; }).quantity=record.quantity;
+            console.log(('el objetiño encotrado'), obj);
+
+          }
+          else{
+            shoppingcart.push(record);
+          }
+          localStorage.setItem('shoppingcart',JSON.stringify(shoppingcart));
+          console.log('final shopcart',JSON.parse(localStorage.getItem('shoppingcart')));
+        }
         console.log('you just added ->',localStorage.getItem(record.id));
         message.success(record.quantity +' '+record.name + ' added to cart',2);
       }
@@ -167,8 +187,8 @@ class ProductsTable extends Component {
 
        },
        {
-         title: 'Availability',
-         key: 'shopping cart',
+         title: 'Shopping cart',
+         key: 'addtocart',
          render: (text, record) => (
             <span>
               <Button title="Remove from shopping cart" onClick={this.removeFromCart.bind(this,record)} ><Icon type="minus" /></Button>

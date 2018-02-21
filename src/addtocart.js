@@ -6,7 +6,7 @@ import { Layout, Breadcrumb } from 'antd';
 const { Content } = Layout;
 
 /*
-* Extraer del localStorage la info para el shopping cart
+* Extraer del localStorage la info para el shopping cart star
 */
 
 class Home extends Component {
