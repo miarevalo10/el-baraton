@@ -14,7 +14,7 @@ class Navbar extends Component {
       this.state = {
           items: data
       }
-      console.log(this.state.items);
+      //console.log(this.state.items);
 
   }
 
@@ -26,7 +26,7 @@ class Navbar extends Component {
   *Checks if it's final sublevel
   */
   isLast(item) {
-    return !item.sublevels;
+    return !item.sublevels;   
   }
 
   render() {

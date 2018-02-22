@@ -29,6 +29,9 @@ class Home extends Component {
           <div style={{ background: '#fff', padding: 24, minHeight: 280 }}>
 
             <h1>Welcome!</h1>
+            <p>This is El Baraton's web shop. You can choose a product from any category available.
+             Then, choose quantity and add to cart. Finally, you can review the item you choose
+             in the shopping cart and checkout the ones you prefer</p>
           </div>
 
         </Content>

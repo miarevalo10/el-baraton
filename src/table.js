@@ -27,7 +27,7 @@ class ProductsTable extends Component {
           filtered: false,
           pricerange:[]
         };
-        
+
         this.applyFilters = this.applyFilters.bind(this);
         this.addToCart= this.addToCart.bind(this);
         this.removeFromCart= this.removeFromCart.bind(this);
@@ -45,7 +45,7 @@ class ProductsTable extends Component {
           this.setState({subleveldata: result2});
           this.setState({products: result2});
           };
-          console.log('new products',this.subleveldata);
+          //console.log('new products',this.subleveldata);
       }
 
       /*
@@ -54,14 +54,14 @@ class ProductsTable extends Component {
       */
       handleSearch = (e) => {
         if(e.trim()!==''){
-          console.log('searchingdude ', e);
+        //  console.log('searchingdude ', e);
           const result3 =  this.state.subleveldata.filter(product => product.name == e);
-          console.log('resultado searching',result3);
+        //  console.log('resultado searching',result3);
           this.setState({products: result3});
         }
         else{
           const result3 =  this.state.subleveldata.filter(product => product.sublevel_id == this.props.match.params.sublevelid);
-          console.log('resultado searching',result3);
+        //  console.log('resultado searching',result3);
           this.setState({products: result3});
         }
       }
@@ -71,7 +71,7 @@ class ProductsTable extends Component {
       * quantity according to number of times '+' is clicked
       */
       addToCart = (record) => {
-        console.log('le record', record);
+      //  console.log('le record', record);
         record.quantity = (localStorage.getItem(record.id)===null) ? 1 : record.quantity+1;
         var shoppingcart=[];
         localStorage.setItem(record.id,JSON.stringify(record));
@@ -88,16 +88,16 @@ class ProductsTable extends Component {
           {
             var obj = shoppingcart.find(function (obj) { return obj.id === record.id; });
             shoppingcart.find(function (obj) { return obj.id == record.id; }).quantity=record.quantity;
-            console.log(('el objetiño encotrado'), obj);
+          //  console.log(('found object'), obj);
 
           }
           else{
             shoppingcart.push(record);
           }
           localStorage.setItem('shoppingcart',JSON.stringify(shoppingcart));
-          console.log('final shopcart',JSON.parse(localStorage.getItem('shoppingcart')));
+          //console.log('final shopcart',JSON.parse(localStorage.getItem('shoppingcart')));
         }
-        console.log('you just added ->',localStorage.getItem(record.id));
+        //console.log('you just added ->',localStorage.getItem(record.id));
         message.success(record.quantity +' '+record.name + ' added to cart',2);
       }
 
@@ -106,7 +106,7 @@ class ProductsTable extends Component {
       * If quantity reaches 0, record is removed from localStorage
       */
       removeFromCart = (record) => {
-        console.log('le record', record);
+        //console.log('le record', record);
         var stringshoppingcart =localStorage.getItem('shoppingcart');
         if(stringshoppingcart===null || JSON.parse(stringshoppingcart).find(function (obj) { return obj.id === record.id; })==null )
         {
@@ -120,18 +120,18 @@ class ProductsTable extends Component {
           var obj = shoppingcart.find(function (obj) { return obj.id === record.id; });
           if(obj.quantity<=1){
             //Remove item from shopping cart cause quantity will be 0 or negative
-            console.log('halo');
+            //console.log('halo');
             shoppingcart.splice(shoppingcart.indexOf(obj), 1);
           }
           else{
             shoppingcart.find(function (obj) { return obj.id == record.id; }).quantity--;
-            console.log(('el objetiño encotrado'), obj);
+          //  console.log(('el objetiño encotrado'), obj);
           }
 
           localStorage.setItem('shoppingcart',JSON.stringify(shoppingcart));
-          console.log('final shopcart',JSON.parse(localStorage.getItem('shoppingcart')));
+        //  console.log('final shopcart',JSON.parse(localStorage.getItem('shoppingcart')));
         }
-        console.log('you just added ->',localStorage.getItem(record.id));
+        //console.log('you just added ->',localStorage.getItem(record.id));
 
       }
 
@@ -217,7 +217,7 @@ class ProductsTable extends Component {
                     <Col span={22}>
                       <Breadcrumb style={{ margin: '16px 0' }}>
                         <Breadcrumb.Item><Link to='/'>Home</Link></Breadcrumb.Item>
-                        <Breadcrumb.Item>{this.props.match.params.product}</Breadcrumb.Item>
+                      <Breadcrumb.Item>{this.props.match.params.product.replace(/-/g," / ")}</Breadcrumb.Item>
                       </Breadcrumb>
                     </Col>
                     <Col span={2}>
@@ -225,7 +225,7 @@ class ProductsTable extends Component {
                     </Col>
                   </Row>
                   <div style={{ background: '#ECECEC', padding: '30px' }}>
-                    <h1>{this.props.match.params.product}</h1>
+                    <h2>{this.props.match.params.product.replace(/-/g," ")}</h2>
                     <div>
                       <WrappedFilters filters={this.applyFilters}></WrappedFilters>
                       <Search
