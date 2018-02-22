@@ -155,7 +155,7 @@ class ProductsTable extends Component {
       }
 
       /*
-      *This is called from the child component, filters, it applies the filtes submitted by the user
+      *This is called from the child component, filters. It applies the filtes submitted by the user
       */
       applyFilters(filter){
 
@@ -171,7 +171,8 @@ class ProductsTable extends Component {
         const result4 =  this.state.subleveldata.filter(product => (
           product.quantity >= filter.quantity &&
           product.price.replace("$","").replace(",","")>=filter.minprice&&
-          product.price.replace("$","").replace(",","")<=filter.maxprice)
+          product.price.replace("$","").replace(",","")<=filter.maxprice&&
+          product.available===filter.available)
         );
         this.setState({products: result4});
 
@@ -206,7 +207,6 @@ class ProductsTable extends Component {
          render: (text, record) => (
             <span>
               <Button title="Remove from shopping cart" onClick={this.removeFromCart.bind(this,record)} ><Icon type="minus" /></Button>
-
               <Button title="Add to shopping cart" onClick={this.addToCart.bind(this,record)} ><Icon type="plus" /></Button>
             </span>
           )

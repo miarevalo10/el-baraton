@@ -58,14 +58,14 @@ class Filters extends Component {
           {...formItemLayout}
           label="Available"
         >
-          {getFieldDecorator('switch', { valuePropName: 'checked', initialValue:true})(
+          {getFieldDecorator('available', { valuePropName: 'checked', initialValue:true})(
             <Switch />
           )}
         </FormItem>
 
         <FormItem
           wrapperCol={{ span: 12, offset: 6 }}>
-          <Button type="primary" htmlType="submit">Submit</Button>
+          <Button type="primary" htmlType="submit">Apply filters</Button>
         </FormItem>
       </Form>
     );
